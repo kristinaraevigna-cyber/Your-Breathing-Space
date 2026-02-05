@@ -42,7 +42,7 @@ export const T = {
   borderDark: "rgba(42,42,42,0.15)",
   shadow: "0 4px 24px rgba(42,42,42,0.08)",
   shadowLg: "0 12px 40px rgba(42,42,42,0.12)",
-  shadowSoft: "0 2px 12px rgba(212,144,126,0.15)",
+  shadowSoft: "0 2px 12px rgba(212,144,126,0.15)"
 
   // Radii
   radius: "16px",
