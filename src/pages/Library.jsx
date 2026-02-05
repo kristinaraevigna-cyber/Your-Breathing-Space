@@ -1,139 +1,94 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api';
-
-const CATEGORIES = [
-  { value: 'all', label: 'All' },
-  { value: 'wellbeing', label: '🌱 Wellbeing' },
-  { value: 'tools', label: '🛠 Tools' },
-  { value: 'connection', label: '💛 Connection' },
-  { value: 'resilience', label: '🌿 Resilience' },
-  { value: 'self_care', label: '💆 Self Care' },
-  { value: 'mindfulness', label: '🧘 Mindfulness' },
-];
-
-const TYPE_META = {
-  article: { icon: '📄', label: 'Article' },
-  video: { icon: '🎬', label: 'Video' },
-  audio: { icon: '🎧', label: 'Audio' },
-  exercise: { icon: '💪', label: 'Exercise' },
-  worksheet: { icon: '📋', label: 'Worksheet' },
-  external_link: { icon: '🔗', label: 'Link' },
-};
+import { T } from '../lib/theme';
+import { Icons } from '../components/Icons';
+import { BottomNav } from '../components/BottomNav';
 
 export default function Library() {
   const navigate = useNavigate();
-  const [resources, setResources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState('all');
-  const [weekFilter, setWeekFilter] = useState('all');
-  const [showBookmarked, setShowBookmarked] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('All');
 
-  useEffect(() => { loadResources(); }, [category, weekFilter]);
+  const categories = ['All', 'Calming', 'Energising', 'Coping', 'Gratitude', 'Meaning'];
 
-  const loadResources = async () => {
-    try {
-      const params = new URLSearchParams();
-      if (category !== 'all') params.set('category', category);
-      if (weekFilter !== 'all') params.set('week', weekFilter);
-      const qs = params.toString();
-      const data = await api.get(`/library${qs ? `?${qs}` : ''}`);
-      setResources(data);
-    } catch (err) { console.error(err); }
-    finally { setLoading(false); }
-  };
+  const interventions = [
+    { title: 'Tactical Breathing', category: 'Calming', duration: '4 min', desc: 'Box breathing to activate your parasympathetic response', color: T.accent, icon: Icons.Wind },
+    { title: 'Gratitude Letter', category: 'Gratitude', duration: '10 min', desc: 'Write a heartfelt letter to someone who matters', color: T.lavender, icon: Icons.Heart },
+    { title: 'Body Scan', category: 'Calming', duration: '8 min', desc: 'Progressive relaxation from head to toe', color: T.sky, icon: Icons.Sparkle },
+    { title: 'Strengths Spotting', category: 'Energising', duration: '5 min', desc: 'Identify and lean into your signature strengths', color: T.warm, icon: Icons.Star },
+    { title: 'Values Alignment', category: 'Meaning', duration: '12 min', desc: 'Reconnect with what matters most to you', color: T.coral, icon: Icons.Target },
+    { title: 'Mindful Moment', category: 'Coping', duration: '3 min', desc: '5-4-3-2-1 grounding technique for right now', color: T.sage, icon: Icons.Leaf },
+  ];
 
-  const handleBookmark = async (resourceId) => {
-    try {
-      await api.post(`/library/${resourceId}/bookmark`);
-      setResources(prev => prev.map(r => {
-        if (r.id !== resourceId) return r;
-        const ul = r.user_library?.[0];
-        return { ...r, user_library: [{ ...(ul || {}), is_bookmarked: !ul?.is_bookmarked }] };
-      }));
-    } catch (err) { console.error(err); }
-  };
-
-  const handleView = async (resource) => {
-    try { await api.post(`/library/${resource.id}/view`); } catch {}
-    if (resource.url) window.open(resource.url, '_blank');
-  };
-
-  const isBookmarked = (r) => r.user_library?.[0]?.is_bookmarked;
-  const displayed = showBookmarked ? resources.filter(r => isBookmarked(r)) : resources;
-
-  if (loading) return <div className="bs-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}><p style={{ color: 'var(--color-text-muted)', fontWeight: 300 }}>Loading...</p></div>;
+  const filtered = activeCategory === 'All' ? interventions : interventions.filter((i) => i.category === activeCategory);
 
   return (
-    <div className="bs-page">
-      <div className="bs-container" style={{ paddingTop: '1.5rem', paddingBottom: '3rem' }}>
-        <button className="bs-back" onClick={() => navigate('/dashboard')}>← Back</button>
-
-        <div className="bs-animate" style={{ padding: '1rem 0 1.5rem' }}>
-          <h1 className="bs-page-title">Resource Library</h1>
-          <p className="bs-page-subtitle">Articles, exercises, and tools to support your journey</p>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: T.cream }}>
+      <div style={{ background: T.dark, padding: '48px 20px 20px', borderRadius: '0 0 24px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+          <button onClick={() => navigate('/dashboard')} style={{ color: T.cream, cursor: 'pointer', background: 'none', border: 'none' }}>
+            <Icons.ArrowLeft size={20} />
+          </button>
+          <div>
+            <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 24, fontWeight: 600, color: T.cream }}>Micro-Interventions</h1>
+            <p style={{ color: 'rgba(248,245,240,0.5)', fontSize: 13, marginTop: 2 }}>Evidence-based exercises</p>
+          </div>
         </div>
 
-        {/* Filters */}
-        <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.75rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
-          {CATEGORIES.map(cat => (
-            <button key={cat.value} className={`bs-chip ${category === cat.value ? 'bs-chip-active' : ''}`} onClick={() => setCategory(cat.value)}>{cat.label}</button>
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+          {categories.map((cat) => (
+            <button key={cat} onClick={() => setActiveCategory(cat)} style={{
+              padding: '7px 16px', borderRadius: T.radiusFull, fontSize: 12, fontWeight: 500,
+              background: activeCategory === cat ? T.accent : 'rgba(255,255,255,0.08)',
+              color: activeCategory === cat ? 'white' : 'rgba(248,245,240,0.6)',
+              whiteSpace: 'nowrap', transition: 'all 0.2s', border: 'none', cursor: 'pointer',
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
+              {cat}
+            </button>
           ))}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-          <select className="bs-select" value={weekFilter} onChange={e => setWeekFilter(e.target.value)} style={{ width: 'auto', fontSize: '0.84rem', padding: '0.45rem 0.75rem' }}>
-            <option value="all">All weeks</option>
-            {[1,2,3,4].map(w => <option key={w} value={w}>Week {w}</option>)}
-          </select>
-          <button className={`bs-chip ${showBookmarked ? 'bs-chip-active' : ''}`} onClick={() => setShowBookmarked(!showBookmarked)}>⭐ Saved</button>
-        </div>
+      </div>
 
-        {/* Resources */}
-        {displayed.length === 0 ? (
-          <div className="bs-empty">
-            <div className="bs-empty-icon">📚</div>
-            <p className="bs-empty-text">{showBookmarked ? 'No saved resources yet.' : 'No resources found.'}</p>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {displayed.map((resource, i) => {
-              const meta = TYPE_META[resource.resource_type] || TYPE_META.article;
-              const saved = isBookmarked(resource);
-              return (
-                <div key={resource.id} className={`bs-animate bs-animate-delay-${Math.min(i+1,4)}`} style={{
-                  display: 'flex', alignItems: 'flex-start', gap: '1rem',
-                  background: 'white', borderRadius: 'var(--radius-lg)', padding: '1.25rem',
-                  border: '1px solid var(--color-warm-dark)', transition: 'all 0.2s',
-                }}>
-                  <div style={{
-                    width: '44px', height: '44px', borderRadius: 'var(--radius-md)',
-                    background: 'var(--color-warm)', display: 'flex', alignItems: 'center',
-                    justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0,
-                  }}>{meta.icon}</div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{ fontWeight: 500, fontSize: '0.95rem', color: 'var(--color-text)', marginBottom: '0.2rem' }}>{resource.title}</h3>
-                    {resource.description && <p style={{ fontSize: '0.84rem', color: 'var(--color-text-muted)', fontWeight: 300, lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{resource.description}</p>}
-                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-                      <span className="bs-pill bs-pill-warm">{meta.label}</span>
-                      {resource.category && <span className="bs-pill bs-pill-warm" style={{ textTransform: 'capitalize' }}>{resource.category.replace('_',' ')}</span>}
-                      {resource.week_number && <span className="bs-pill bs-pill-blue">Week {resource.week_number}</span>}
-                      {resource.reading_time_minutes && <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>{resource.reading_time_minutes} min</span>}
-                    </div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '20px 20px 100px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {filtered.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <div key={i} style={{
+                background: T.white, borderRadius: T.radius, boxShadow: T.shadow, overflow: 'hidden',
+                cursor: 'pointer', transition: 'transform 0.2s',
+              }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-1px)')}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}>
+                <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                  <div style={{ width: 80, background: `${item.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Icon size={28} color={item.color} />
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flexShrink: 0 }}>
-                    <button onClick={() => handleBookmark(resource.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.1rem', transition: 'transform 0.2s' }} title={saved ? 'Remove bookmark' : 'Bookmark'}>
-                      {saved ? '⭐' : '☆'}
+                  <div style={{ flex: 1, padding: '16px 16px 16px 14px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                      <p style={{ fontSize: 15, fontWeight: 600, color: T.text }}>{item.title}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <Icons.Clock size={12} color={T.textMuted} />
+                        <span style={{ fontSize: 11, color: T.textMuted }}>{item.duration}</span>
+                      </div>
+                    </div>
+                    <p style={{ fontSize: 13, color: T.textSec, lineHeight: 1.4, marginBottom: 10 }}>{item.desc}</p>
+                    <button style={{
+                      display: 'flex', alignItems: 'center', gap: 6, color: item.color,
+                      fontSize: 13, fontWeight: 600, background: 'none', border: 'none',
+                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", padding: 0,
+                    }}>
+                      Begin exercise <Icons.ArrowRight size={14} color={item.color} />
                     </button>
-                    {resource.url && (
-                      <button onClick={() => handleView(resource)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--color-sage)' }} title="Open">↗</button>
-                    )}
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
+              </div>
+            );
+          })}
+        </div>
       </div>
+
+      <BottomNav active="library" />
     </div>
   );
 }
