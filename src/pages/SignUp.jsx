@@ -1,175 +1,221 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+'use client';
 
-export default function SignUp() {
-  const navigate = useNavigate();
-  const { signUp } = useAuth();
+import { useState } from 'react';
+import { T } from '../shared/theme';
+import { Icons } from '../shared/Icons';
+// import { useRouter } from 'next/navigation';
+// import { supabase } from '@/lib/supabase';
+
+export default function SignupPage() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  // const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
-    const { error } = await signUp(email, password, displayName);
-    if (error) {
-      setError(error.message);
+    setError('');
+
+    try {
+      // ── Supabase Auth ──
+      // const { error } = await supabase.auth.signUp({
+      //   email,
+      //   password,
+      //   options: { data: { full_name: name } },
+      // });
+      // if (error) throw error;
+      // router.push('/dashboard');
+
+      // Placeholder redirect:
+      window.location.href = '/dashboard';
+    } catch (err) {
+      setError(err.message || 'Failed to create account');
+    } finally {
       setLoading(false);
-    } else {
-      navigate('/consent');
     }
   };
 
+  const inputStyle = {
+    width: '100%',
+    padding: '14px 16px',
+    background: T.white,
+    border: `1.5px solid ${T.creamDark}`,
+    borderRadius: T.radiusSm,
+    fontSize: 15,
+    color: T.text,
+    transition: 'border-color 0.2s',
+    fontFamily: "'DM Sans', sans-serif",
+  };
+
   return (
-    <div className="bs-page" style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Left decorative panel */}
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      background: `linear-gradient(180deg, ${T.dark} 0%, ${T.darkAlt} 100%)`,
+    }}>
+      {/* ── Hero Section ── */}
       <div style={{
-        flex: '0 0 45%',
-        background: 'linear-gradient(160deg, var(--color-sage) 0%, var(--color-sage-dark) 100%)',
+        flex: '0 0 280px',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center',
-        padding: '3rem',
+        justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
       }}>
+        {/* Decorative ring */}
         <div style={{
-          position: 'absolute',
-          top: '-15%', left: '-10%',
-          width: '350px', height: '350px',
-          borderRadius: '50%',
-          background: 'rgba(255,255,255,0.05)',
+          position: 'absolute', width: 250, height: 250, borderRadius: '50%',
+          border: '1px solid rgba(168,189,166,0.1)', top: -60, left: -50,
         }} />
-        <div style={{
-          position: 'absolute',
-          bottom: '-15%', right: '-15%',
-          width: '400px', height: '400px',
-          borderRadius: '50%',
-          background: 'rgba(255,255,255,0.04)',
-        }} />
-        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: '320px' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>🌱</div>
-          <h2 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '2rem',
-            color: 'white',
-            marginBottom: '0.75rem',
-            lineHeight: 1.2,
-          }}>Begin something gentle</h2>
-          <p style={{
-            color: 'rgba(255,255,255,0.7)',
-            fontSize: '0.95rem',
-            fontWeight: 300,
-            lineHeight: 1.6,
+
+        <div style={{ textAlign: 'center', zIndex: 1 }}>
+          {/* Logo */}
+          <div style={{
+            width: 56, height: 56, borderRadius: 14,
+            background: `linear-gradient(135deg, ${T.accent}, ${T.accentLight})`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 16px',
           }}>
-            Four weeks of guided support, built around you. No pressure, no judgement.
+            <Icons.Wind size={26} color="white" />
+          </div>
+
+          <h1 style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: 28, fontWeight: 600, color: T.cream,
+          }}>
+            Begin Your Journey
+          </h1>
+
+          <p style={{
+            color: 'rgba(248,245,240,0.5)', fontSize: 13, marginTop: 6,
+          }}>
+            Create your wellness space
           </p>
         </div>
       </div>
 
-      {/* Right form panel */}
+      {/* ── Form Section ── */}
       <div style={{
         flex: 1,
+        background: T.cream,
+        borderRadius: '28px 28px 0 0',
+        padding: '32px 28px',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '3rem',
       }}>
-        <div style={{ maxWidth: '380px', width: '100%', margin: '0 auto' }}>
-          <h1 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '1.75rem',
-            marginBottom: '0.5rem',
-          }}>Create your account</h1>
-          <p style={{
-            color: 'var(--color-text-muted)',
-            fontSize: '0.92rem',
-            fontWeight: 300,
-            marginBottom: '2rem',
+        {error && (
+          <div style={{
+            background: `${T.coral}15`, border: `1px solid ${T.coral}40`,
+            borderRadius: T.radiusSm, padding: '12px 16px', marginBottom: 16,
+            color: T.coral, fontSize: 13,
           }}>
-            It takes less than a minute
-          </p>
+            {error}
+          </div>
+        )}
 
-          {error && (
-            <div className="bs-message bs-message-error" style={{ marginBottom: '1.25rem' }}>
-              {error}
-            </div>
-          )}
+        <form onSubmit={handleSignup} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {/* Full Name */}
+          <div>
+            <label style={{
+              fontSize: 12, fontWeight: 500, color: T.textSec,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              marginBottom: 8, display: 'block',
+            }}>
+              Full Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              required
+              style={inputStyle}
+              onFocus={(e) => (e.target.style.borderColor = T.accent)}
+              onBlur={(e) => (e.target.style.borderColor = T.creamDark)}
+            />
+          </div>
 
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '1rem' }}>
-              <label className="bs-label">Your first name</label>
-              <input
-                type="text"
-                className="bs-input"
-                placeholder="What should we call you?"
-                value={displayName}
-                onChange={e => setDisplayName(e.target.value)}
-                required
-              />
-            </div>
+          {/* Email */}
+          <div>
+            <label style={{
+              fontSize: 12, fontWeight: 500, color: T.textSec,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              marginBottom: 8, display: 'block',
+            }}>
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+              style={inputStyle}
+              onFocus={(e) => (e.target.style.borderColor = T.accent)}
+              onBlur={(e) => (e.target.style.borderColor = T.creamDark)}
+            />
+          </div>
 
-            <div style={{ marginBottom: '1rem' }}>
-              <label className="bs-label">Email</label>
-              <input
-                type="email"
-                className="bs-input"
-                placeholder="you@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-            </div>
+          {/* Password */}
+          <div>
+            <label style={{
+              fontSize: 12, fontWeight: 500, color: T.textSec,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              marginBottom: 8, display: 'block',
+            }}>
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Min 6 characters"
+              required
+              minLength={6}
+              style={inputStyle}
+              onFocus={(e) => (e.target.style.borderColor = T.accent)}
+              onBlur={(e) => (e.target.style.borderColor = T.creamDark)}
+            />
+          </div>
 
-            <div style={{ marginBottom: '1.75rem' }}>
-              <label className="bs-label">Password</label>
-              <input
-                type="password"
-                className="bs-input"
-                placeholder="At least 6 characters"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
-            </div>
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', gap: 10, padding: '16px',
+              borderRadius: T.radiusFull, fontSize: 16, fontWeight: 500,
+              background: T.dark, color: T.cream,
+              border: '1.5px solid rgba(255,255,255,0.1)',
+              cursor: loading ? 'wait' : 'pointer',
+              opacity: loading ? 0.7 : 1,
+              transition: 'all 0.25s ease',
+              fontFamily: "'DM Sans', sans-serif",
+              marginTop: 8,
+            }}
+          >
+            {loading ? 'Creating account...' : 'Create Account'}
+            {!loading && <Icons.ArrowRight size={18} color={T.cream} />}
+          </button>
+        </form>
 
-            <button
-              type="submit"
-              className="bs-btn bs-btn-primary bs-btn-full"
-              disabled={loading}
-              style={{ padding: '0.85rem' }}
-            >
-              {loading ? 'Creating account...' : 'Create account'}
-            </button>
-          </form>
-
-          <p style={{
-            textAlign: 'center',
-            marginTop: '1.5rem',
-            fontSize: '0.88rem',
-            color: 'var(--color-text-muted)',
-            fontWeight: 300,
+        {/* Login link */}
+        <div style={{ textAlign: 'center', marginTop: 16 }}>
+          <span style={{ color: T.textSec, fontSize: 14 }}>Already have an account? </span>
+          <a href="/login" style={{
+            color: T.accent, fontSize: 14, fontWeight: 600,
+            textDecoration: 'none',
           }}>
-            Already have an account?{' '}
-            <Link to="/login" style={{ color: 'var(--color-sage)', fontWeight: 500, textDecoration: 'none' }}>
-              Log in
-            </Link>
-          </p>
+            Sign in
+          </a>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .bs-page > div:first-child { display: none !important; }
-          .bs-page { display: block !important; }
-        }
-      `}</style>
     </div>
   );
 }
