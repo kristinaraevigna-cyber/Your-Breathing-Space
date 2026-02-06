@@ -1,68 +1,36 @@
-export const T = {
-  // Backgrounds
-  bg: "#F2D8CE",
-  bgSoft: "#F5E1D8",
-  bgCard: "#FFFAF7",
-  bgCardPink: "#F0C4B3",
-  bgCardSage: "#8A9E7A",
-  bgCardSageMuted: "#C2CEAA",
-
-  // Core palette
-  blush: "#E8B4A2",
-  blushDark: "#D49A86",
-  blushLight: "#F5DDD4",
-  rose: "#D4907E",
-  sage: "#6B7F5E",
-  sageDark: "#4A5940",
-  sageLight: "#A3B48F",
-  sageMuted: "#C2CEAA",
-  olive: "#5C6B52",
-
-  // Accent variations
-  cream: "#FFF8F5",
-  warmWhite: "#FFFDFB",
-  sand: "#E8D5C4",
-
-  // Text
-  dark: "#2A2A2A",
-  text: "#2A2A2A",
-  textSec: "#6B5E58",
-  textMuted: "#A89890",
-  textOnDark: "#FFF8F5",
-
-  // Functional
-  coral: "#D4756A",
-  lavender: "#B8A0C8",
-  amber: "#D4A85C",
-  sky: "#7FAFBF",
-  teal: "#6BA89E",
-
-  // Borders & shadows
-  border: "rgba(42,42,42,0.08)",
-  borderDark: "rgba(42,42,42,0.15)",
-  shadow: "0 4px 24px rgba(42,42,42,0.08)",
-  shadowLg: "0 12px 40px rgba(42,42,42,0.12)",
-  shadowSoft: "0 2px 12px rgba(212,144,126,0.15)"
-
-  // Radii
-  radius: "16px",
-  radiusSm: "12px",
-  radiusXl: "24px",
-  radiusFull: "999px",
+export const colors = {
+  cream:      '#FAF7F2',
+  sand:       '#F2EDE5',
+  warmWhite:  '#FFFCF8',
+  sage:       '#6B8F71',
+  sageSoft:   '#8AAE8F',
+  sageLight:  '#E4EDE5',
+  sagePale:   '#F0F5F0',
+  terracotta: '#C4705A',
+  terraLight: '#FAEAE5',
+  sky:        '#7CAEC4',
+  skyLight:   '#E5F0F5',
+  honey:      '#D4A854',
+  honeyLight: '#FBF3E0',
+  ink:        '#1A1A1A',
+  body:       '#5C5C5C',
+  muted:      '#9C9890',
+  light:      '#D4CFC8',
+  divider:    'rgba(0,0,0,0.05)',
 };
 
-// Unsplash photos
-export const PHOTOS = {
-  hero: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
-  meditation: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80",
-  nature: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600&q=80",
-  journal: "https://images.unsplash.com/photo-1517842645767-c639042777db?w=600&q=80",
-  breathing: "https://images.unsplash.com/photo-1474418397713-7ede21d49118?w=600&q=80",
-  stretch: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&q=80",
-  parent: "https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=600&q=80",
-  sunset: "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=800&q=80",
-  forest: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80",
-  ocean: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&q=80",
-  morning: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800&q=80",
-  calm: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
+export const fonts = {
+  serif: "'Fraunces', Georgia, serif",
+  sans:  "'Outfit', system-ui, sans-serif",
+};
+
+export const photos = {
+  sprout:     'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=200&fit=crop&crop=center',
+  lavender:   'https://images.unsplash.com/photo-1468327768560-75b778cbb551?w=200&h=200&fit=crop&crop=center',
+  wildflower: 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=200&h=200&fit=crop&crop=center',
+  monstera:   'https://images.unsplash.com/photo-1512428813834-c702c7702b78?w=200&h=200&fit=crop&crop=center',
+  fern:       'https://images.unsplash.com/photo-1446071103084-c257b5f70672?w=200&h=200&fit=crop&crop=center',
+  daisy:      'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=200&h=200&fit=crop&crop=center',
+  eucalyptus: 'https://images.unsplash.com/photo-1470058869958-2a77e919978d?w=200&h=200&fit=crop&crop=center',
+  succulent:  'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=200&h=200&fit=crop&crop=center',
 };
