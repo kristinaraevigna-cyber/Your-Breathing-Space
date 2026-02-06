@@ -3,7 +3,6 @@ const C = {
   sand:       '#F2EDE5',
   warmWhite:  '#FFFCF8',
   sage:       '#6B8F71',
-  sageSoft:   '#8AAE8F',
   sageLight:  '#E4EDE5',
   sagePale:   '#F0F5F0',
   terracotta: '#C4705A',
@@ -19,11 +18,10 @@ const C = {
   divider:    'rgba(0,0,0,0.05)',
 };
 
-const serif = "'Fraunces', Georgia, serif";
-const sans  = "'Outfit', system-ui, sans-serif";
+const SERIF = "'Fraunces', Georgia, serif";
+const SANS  = "'Outfit', system-ui, sans-serif";
 
-// ── Plant Photos (Unsplash) ────────────────────────────
-const photos = {
+const IMG = {
   sprout:     'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=200&fit=crop&crop=center',
   lavender:   'https://images.unsplash.com/photo-1468327768560-75b778cbb551?w=200&h=200&fit=crop&crop=center',
   wildflower: 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=200&h=200&fit=crop&crop=center',
@@ -31,18 +29,24 @@ const photos = {
   fern:       'https://images.unsplash.com/photo-1446071103084-c257b5f70672?w=200&h=200&fit=crop&crop=center',
   daisy:      'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=200&h=200&fit=crop&crop=center',
   eucalyptus: 'https://images.unsplash.com/photo-1470058869958-2a77e919978d?w=200&h=200&fit=crop&crop=center',
-  succulent:  'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?w=200&h=200&fit=crop&crop=center',
 };
 
-// ── Reusable Components ────────────────────────────────
-function PlantPhoto({ src, size = 40, radius = '50%', shadow = false, style = {} }) {
+/* ── Tiny Components ────────────────────────────────────── */
+
+function Photo({ src, size = 40, radius = '50%', shadow = false, style = {} }) {
   return (
-    <div style={{
-      width: size, height: size, borderRadius: radius,
-      overflow: 'hidden', flexShrink: 0, background: C.sand,
-      boxShadow: shadow ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
-      ...style,
-    }}>
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: radius,
+        overflow: 'hidden',
+        flexShrink: 0,
+        background: C.sand,
+        boxShadow: shadow ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+        ...style,
+      }}
+    >
       <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
     </div>
   );
@@ -50,15 +54,19 @@ function PlantPhoto({ src, size = 40, radius = '50%', shadow = false, style = {}
 
 function Blob({ color = C.sageLight, style: s = {} }) {
   return (
-    <div style={{
-      position: 'absolute',
-      borderRadius: '50% 40% 60% 50% / 50% 50% 40% 60%',
-      background: color, opacity: 0.45, pointerEvents: 'none', ...s,
-    }} />
+    <div
+      style={{
+        position: 'absolute',
+        borderRadius: '50% 40% 60% 50% / 50% 50% 40% 60%',
+        background: color,
+        opacity: 0.45,
+        pointerEvents: 'none',
+        ...s,
+      }}
+    />
   );
 }
 
-// ── Icons ──────────────────────────────────────────────
 function LeafIcon({ s = 20, c = C.sage }) {
   return (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={1.5} strokeLinecap="round">
@@ -68,7 +76,7 @@ function LeafIcon({ s = 20, c = C.sage }) {
   );
 }
 
-function ArrowRight({ s = 16, c = 'currentColor' }) {
+function ArrowIcon({ s = 16, c = 'currentColor' }) {
   return (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={2} strokeLinecap="round">
       <line x1="5" y1="12" x2="19" y2="12" />
@@ -77,94 +85,137 @@ function ArrowRight({ s = 16, c = 'currentColor' }) {
   );
 }
 
-// ── Programme Data ─────────────────────────────────────
-const weeks = [
-  { n: 1, title: 'Understanding You', time: '25 min', color: C.sage,      bg: C.sagePale,    photo: photos.sprout },
-  { n: 2, title: 'Tough Moments',     time: '30 min', color: C.terracotta, bg: C.terraLight,  photo: photos.lavender },
-  { n: 3, title: 'Connection',        time: '30 min', color: C.sky,        bg: C.skyLight,    photo: photos.wildflower },
-  { n: 4, title: 'Resilience',        time: '30 min', color: C.honey,      bg: C.honeyLight,  photo: photos.monstera },
+/* ── Data ────────────────────────────────────────────────── */
+
+const WEEKS = [
+  { n: 1, title: 'Understanding You', time: '25 min', color: C.sage,      bg: C.sagePale,   photo: IMG.sprout },
+  { n: 2, title: 'Tough Moments',     time: '30 min', color: C.terracotta, bg: C.terraLight, photo: IMG.lavender },
+  { n: 3, title: 'Connection',        time: '30 min', color: C.sky,        bg: C.skyLight,   photo: IMG.wildflower },
+  { n: 4, title: 'Resilience',        time: '30 min', color: C.honey,      bg: C.honeyLight, photo: IMG.monstera },
 ];
 
-const features = [
-  { photo: photos.fern,       label: '20 min/week' },
-  { photo: photos.daisy,      label: 'Your choice' },
-  { photo: photos.wildflower, label: 'Family activities' },
-  { photo: photos.eucalyptus, label: 'No pressure' },
+const FEATURES = [
+  { photo: IMG.fern,       label: '20 min/week' },
+  { photo: IMG.daisy,      label: 'Your choice' },
+  { photo: IMG.wildflower, label: 'Family activities' },
+  { photo: IMG.eucalyptus, label: 'No pressure' },
 ];
 
-// ══════════════════════════════════════════════════════════
-// LANDING PAGE
-// ══════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
+   LANDING PAGE COMPONENT
+   ══════════════════════════════════════════════════════════ */
+
 export default function Landing() {
   const handleSignup = () => {
-    // Wire up your signup route or modal here
+    // Replace with your routing logic
     console.log('Navigate to signup');
   };
 
   const handleLogin = () => {
-    // Wire up your login route or modal here
+    // Replace with your routing logic
     console.log('Navigate to login');
   };
 
   return (
-    <div style={{
-      minHeight: '100vh', fontFamily: sans,
-      background: C.cream, color: C.ink, overflow: 'hidden',
-    }}>
-      {/* ── Background Blobs ──────────────────────────── */}
-      <Blob color={C.sageLight}  style={{ width: 400, height: 400, top: -100, right: -150 }} />
+    <div
+      style={{
+        minHeight: '100vh',
+        fontFamily: SANS,
+        background: C.cream,
+        color: C.ink,
+        overflow: 'hidden',
+      }}
+    >
+      {/* Background blobs */}
+      <Blob color={C.sageLight} style={{ width: 400, height: 400, top: -100, right: -150 }} />
       <Blob color={C.terraLight} style={{ width: 300, height: 300, bottom: '20%', left: -100 }} />
 
-      {/* ── Navigation ────────────────────────────────── */}
-      <nav style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '20px 28px', maxWidth: 1000, margin: '0 auto',
-        position: 'relative', zIndex: 2,
-      }}>
+      {/* ── Nav ───────────────────────────────────────── */}
+      <nav
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '20px 28px',
+          maxWidth: 1000,
+          margin: '0 auto',
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <LeafIcon s={22} />
-          <span style={{ fontFamily: serif, fontSize: 18, fontWeight: 600 }}>
+          <span style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 600 }}>
             Breathing Space
           </span>
         </div>
         <button
           onClick={handleSignup}
           style={{
-            padding: '10px 22px', background: C.sage, color: '#fff',
-            borderRadius: 999, fontSize: 13, fontWeight: 600,
-            border: 'none', cursor: 'pointer', fontFamily: sans,
+            padding: '10px 22px',
+            background: C.sage,
+            color: '#fff',
+            borderRadius: 999,
+            fontSize: 13,
+            fontWeight: 600,
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: SANS,
           }}
         >
           Start free
         </button>
       </nav>
 
-      {/* ── Hero Section ──────────────────────────────── */}
-      <div style={{
-        maxWidth: 1000, margin: '0 auto',
-        padding: 'clamp(48px, 10vh, 100px) 28px 48px',
-        position: 'relative', zIndex: 2,
-      }}>
+      {/* ── Hero ──────────────────────────────────────── */}
+      <div
+        style={{
+          maxWidth: 1000,
+          margin: '0 auto',
+          padding: 'clamp(48px, 10vh, 100px) 28px 48px',
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
         <div style={{ maxWidth: 520 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-            <PlantPhoto src={photos.sprout} size={22} />
-            <p style={{ fontSize: 12, fontWeight: 600, color: C.sage, letterSpacing: '0.12em' }}>
+            <Photo src={IMG.sprout} size={22} />
+            <p
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: C.sage,
+                letterSpacing: '0.12em',
+              }}
+            >
               4-WEEK PROGRAMME FOR PARENTS
             </p>
           </div>
 
-          <h1 style={{
-            fontFamily: serif, fontSize: 'clamp(36px, 6vw, 64px)',
-            fontWeight: 400, lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: 20,
-          }}>
-            A gentle space<br />
+          <h1
+            style={{
+              fontFamily: SERIF,
+              fontSize: 'clamp(36px, 6vw, 64px)',
+              fontWeight: 400,
+              lineHeight: 1.1,
+              letterSpacing: '-0.03em',
+              marginBottom: 20,
+            }}
+          >
+            A gentle space
+            <br />
             to <em style={{ fontStyle: 'italic', color: C.sage }}>breathe</em>.
           </h1>
 
-          <p style={{
-            fontSize: 16, color: C.body, lineHeight: 1.7,
-            marginBottom: 36, maxWidth: 380,
-          }}>
+          <p
+            style={{
+              fontSize: 16,
+              color: C.body,
+              lineHeight: 1.7,
+              marginBottom: 36,
+              maxWidth: 380,
+            }}
+          >
             Your pace. Your choice. No pressure. Just support when you need it.
           </p>
 
@@ -172,21 +223,36 @@ export default function Landing() {
             <button
               onClick={handleSignup}
               style={{
-                display: 'flex', alignItems: 'center', gap: 8,
-                padding: '14px 28px', background: C.sage, color: '#fff',
-                borderRadius: 999, fontSize: 15, fontWeight: 600,
-                border: 'none', cursor: 'pointer', fontFamily: sans,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '14px 28px',
+                background: C.sage,
+                color: '#fff',
+                borderRadius: 999,
+                fontSize: 15,
+                fontWeight: 600,
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: SANS,
               }}
             >
-              Begin <ArrowRight s={16} c="#fff" />
+              Begin <ArrowIcon s={16} c="#fff" />
             </button>
             <button
               onClick={handleLogin}
               style={{
-                padding: '14px 24px', background: 'transparent', color: C.body,
-                fontSize: 15, fontWeight: 500, border: 'none', cursor: 'pointer',
-                fontFamily: sans, textDecoration: 'underline',
-                textDecorationColor: C.light, textUnderlineOffset: 3,
+                padding: '14px 24px',
+                background: 'transparent',
+                color: C.body,
+                fontSize: 15,
+                fontWeight: 500,
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: SANS,
+                textDecoration: 'underline',
+                textDecorationColor: C.light,
+                textUnderlineOffset: 3,
               }}
             >
               Sign in
@@ -195,32 +261,53 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* ── Week Cards (Centered) ─────────────────────── */}
-      <div style={{
-        padding: '0 28px 64px', maxWidth: 1000,
-        margin: '0 auto', position: 'relative', zIndex: 2,
-      }}>
+      {/* ── Week Cards (centered) ─────────────────────── */}
+      <div
+        style={{
+          padding: '0 28px 64px',
+          maxWidth: 1000,
+          margin: '0 auto',
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
         <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8 }}>
-          {weeks.map(w => (
+          {WEEKS.map((w) => (
             <div
               key={w.n}
               style={{
-                minWidth: 155, background: w.bg, borderRadius: 20,
-                padding: '24px 18px', flexShrink: 0, textAlign: 'center',
-                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                minWidth: 155,
+                background: w.bg,
+                borderRadius: 20,
+                padding: '24px 18px',
+                flexShrink: 0,
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
               }}
             >
-              <PlantPhoto src={w.photo} size={56} radius={16} shadow />
-              <p style={{
-                fontSize: 11, fontWeight: 600, color: w.color,
-                letterSpacing: '0.06em', marginTop: 14,
-              }}>
+              <Photo src={w.photo} size={56} radius={16} shadow />
+              <p
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: w.color,
+                  letterSpacing: '0.06em',
+                  marginTop: 14,
+                }}
+              >
                 WEEK {w.n}
               </p>
-              <p style={{
-                fontFamily: serif, fontSize: 16, fontWeight: 500,
-                color: C.ink, marginTop: 4,
-              }}>
+              <p
+                style={{
+                  fontFamily: SERIF,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: C.ink,
+                  marginTop: 4,
+                }}
+              >
                 {w.title}
               </p>
             </div>
@@ -228,19 +315,30 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* ── Features Row ──────────────────────────────── */}
-      <div style={{
-        background: C.warmWhite, padding: '64px 28px',
-        borderTop: `1px solid ${C.divider}`,
-      }}>
-        <div style={{
-          maxWidth: 700, margin: '0 auto',
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: 32, textAlign: 'center',
-        }}>
-          {features.map((f, i) => (
-            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <PlantPhoto src={f.photo} size={44} shadow />
+      {/* ── Features ──────────────────────────────────── */}
+      <div
+        style={{
+          background: C.warmWhite,
+          padding: '64px 28px',
+          borderTop: `1px solid ${C.divider}`,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 700,
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+            gap: 32,
+            textAlign: 'center',
+          }}
+        >
+          {FEATURES.map((f, i) => (
+            <div
+              key={i}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            >
+              <Photo src={f.photo} size={44} shadow />
               <p style={{ fontSize: 14, fontWeight: 600, color: C.ink, marginTop: 10 }}>
                 {f.label}
               </p>
@@ -254,25 +352,47 @@ export default function Landing() {
         <Blob
           color={C.sageLight}
           style={{
-            width: 250, height: 250, top: '50%', left: '50%',
+            width: 250,
+            height: 250,
+            top: '50%',
+            left: '50%',
             transform: 'translate(-50%, -50%)',
           }}
         />
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14, position: 'relative' }}>
-          <PlantPhoto src={photos.monstera} size={56} shadow />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: 14,
+            position: 'relative',
+          }}
+        >
+          <Photo src={IMG.monstera} size={56} shadow />
         </div>
-        <p style={{
-          fontFamily: serif, fontSize: 28, fontWeight: 400,
-          color: C.ink, marginBottom: 20, position: 'relative',
-        }}>
+        <p
+          style={{
+            fontFamily: SERIF,
+            fontSize: 28,
+            fontWeight: 400,
+            color: C.ink,
+            marginBottom: 20,
+            position: 'relative',
+          }}
+        >
           Ready to start?
         </p>
         <button
           onClick={handleSignup}
           style={{
-            padding: '14px 32px', background: C.sage, color: '#fff',
-            borderRadius: 999, fontSize: 15, fontWeight: 600,
-            border: 'none', cursor: 'pointer', fontFamily: sans,
+            padding: '14px 32px',
+            background: C.sage,
+            color: '#fff',
+            borderRadius: 999,
+            fontSize: 15,
+            fontWeight: 600,
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: SANS,
             position: 'relative',
           }}
         >
